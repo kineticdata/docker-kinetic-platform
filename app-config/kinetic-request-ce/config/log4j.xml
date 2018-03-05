@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <!-- Console Appender -->
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} %5p [%-22.22t] - %m%n"/>
+        </layout>
+    </appender>
+    
+    <!-- Application File Appender -->
+    <appender name="app-file-appender" class="org.apache.log4j.RollingFileAppender"> 
+        <param name="Append" value="true"/>
+        <param name="File" value="${com.kineticdata.core.dataDirectory}/logs/application.log"/>
+        <param name="MaxFileSize" value="20MB"/>
+        <param name="MaxBackupIndex" value="10"/>
+        <layout class="org.apache.log4j.PatternLayout"> 
+            <param name="ConversionPattern" value="%d{ISO8601} %5p [%-22.22t] - %m%n"/> 
+        </layout> 
+    </appender>
+    
+    <!-- Heartbeat File Appender -->
+    <appender name="heartbeat-file-appender" class="org.apache.log4j.RollingFileAppender"> 
+        <param name="Append" value="true"/>
+        <param name="File" value="${com.kineticdata.core.dataDirectory}/logs/heartbeat.log"/>
+        <param name="MaxFileSize" value="1MB"/>
+        <param name="MaxBackupIndex" value="2"/>
+        <layout class="org.apache.log4j.PatternLayout"> 
+            <param name="ConversionPattern" value="%d{ISO8601} %m%n"/> 
+        </layout> 
+    </appender>
+
+    <!-- Index Error File Appender -->
+    <appender name="index-err-file-appender" class="org.apache.log4j.RollingFileAppender">
+        <param name="Append" value="true"/>
+        <param name="File" value="${com.kineticdata.core.dataDirectory}/logs/index-error.log"/>
+        <param name="MaxFileSize" value="20MB"/>
+        <param name="MaxBackupIndex" value="1000"/>
+        <layout class="org.apache.log4j.PatternLayout"> 
+            <param name="ConversionPattern" value="%d{ISO8601} %5p [%-22.22t] - %m%n"/> 
+        </layout> 
+    </appender>
+
+    <!-- Webhook Error File Appender -->
+    <appender name="webhook-err-file-appender" class="org.apache.log4j.RollingFileAppender">
+        <param name="Append" value="true"/>
+        <param name="File" value="${com.kineticdata.core.dataDirectory}/logs/webhook-error.log"/>
+        <param name="MaxFileSize" value="20MB"/>
+        <param name="MaxBackupIndex" value="1000"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} %5p [%-22.22t] - %m%n"/>
+        </layout>
+    </appender>
+    
+    <!-- Structured Access File Appender -->
+    <appender name="structured-access-file-appender" class="org.apache.log4j.RollingFileAppender"> 
+        <param name="Append" value="true"/>
+        <param name="File" value="${com.kineticdata.core.dataDirectory}/logs/structured.access.log"/>
+        <param name="MaxFileSize" value="20MB"/>
+        <param name="MaxBackupIndex" value="10"/>
+        <layout class="org.apache.log4j.PatternLayout"> 
+            <param name="ConversionPattern" value="%d{ISO8601} %X{app.instanceId} %X{app.sessionId} %X{app.correlationId} %X{app.requestId} %X{app.space} %X{app.user} %X{access.addressChain} - %X{access.requestMethod} %X{access.requestPath}%X{access.requestQuery} %X{access.responseStatus} %X{access.responseTime}ms%n"/> 
+        </layout> 
+    </appender>
+    
+    <!-- Structured Authentication File Appender -->
+    <appender name="structured-authentication-file-appender" class="org.apache.log4j.RollingFileAppender"> 
+        <param name="Append" value="true"/>
+        <param name="File" value="${com.kineticdata.core.dataDirectory}/logs/structured.authentication.log"/>
+        <param name="MaxFileSize" value="20MB"/>
+        <param name="MaxBackupIndex" value="10"/>
+        <layout class="org.apache.log4j.PatternLayout"> 
+            <param name="ConversionPattern" value="%d{ISO8601} %X{app.instanceId} %X{app.sessionId} %X{app.correlationId} %X{app.requestId} %X{app.space} %X{app.user} %X{access.addressChain} - %X{auth.event} %X{auth.strategy} PRINCIPAL:%X{auth.principal} %m%n"/>
+        </layout> 
+    </appender>
+    
+    <!-- Structured Application File Appender -->
+    <appender name="structured-application-file-appender" class="org.apache.log4j.RollingFileAppender"> 
+        <param name="Append" value="true"/>
+        <param name="File" value="${com.kineticdata.core.dataDirectory}/logs/structured.application.log"/>
+        <param name="MaxFileSize" value="20MB"/>
+        <param name="MaxBackupIndex" value="10"/>
+        <layout class="org.apache.log4j.PatternLayout"> 
+            <param name="ConversionPattern" value="%d{ISO8601} %X{app.instanceId} %X{app.sessionId} %X{app.correlationId} %X{app.requestId} %X{app.space} %X{app.user} %X{access.addressChain} %5p [%t] - %m%n"/> 
+        </layout>
+        <filter class="com.kineticdata.commons.logging.ContextFilter">
+            <param name="KeyToMatch" value="app.requestId" />
+            <param name="PatternToMatch" value=".+" />
+        </filter>
+    </appender>
+    
+    <!-- Structured System File Appender -->
+    <appender name="structured-system-file-appender" class="org.apache.log4j.RollingFileAppender"> 
+        <param name="Append" value="true"/>
+        <param name="File" value="${com.kineticdata.core.dataDirectory}/logs/structured.system.log"/>
+        <param name="MaxFileSize" value="20MB"/>
+        <param name="MaxBackupIndex" value="10"/>
+        <layout class="org.apache.log4j.PatternLayout"> 
+            <param name="ConversionPattern" value="%d{ISO8601} %X{app.instanceId} %5p [%t] - %m%n"/> 
+        </layout>
+        <filter class="com.kineticdata.commons.logging.ContextFilter">
+            <param name="KeyToMatch" value="app.requestId" />
+            <param name="PatternToMatch" value="^$" />
+        </filter>
+    </appender>
+
+    <!-- LOGGERS -->
+
+    <!-- Kinetic Core Application Logger -->
+    <logger name="com.kineticdata.core" additivity="false">
+        <level value="debug"/>
+        <appender-ref ref="app-file-appender"/>
+        <appender-ref ref="structured-application-file-appender"/>
+        <appender-ref ref="structured-system-file-appender"/>
+    </logger>
+    
+    <!-- Kinetic Core Access Logger -->
+    <logger name="com.kineticdata.core.loggers.access" additivity="false">
+        <level value="info"/>
+        <appender-ref ref="structured-access-file-appender"/>
+    </logger>
+
+    <!-- Kinetic Core Authentication Logger -->
+    <logger name="com.kineticdata.core.loggers.authentication" additivity="false">
+        <level value="info"/>
+        <appender-ref ref="structured-authentication-file-appender"/>
+    </logger>
+
+    <!-- Kinetic Core Heartbeat Logger -->
+    <logger name="com.kineticdata.core.loggers.heartbeat" additivity="false">
+        <level value="info"/>
+        <appender-ref ref="heartbeat-file-appender"/>
+    </logger>
+    
+    <!-- Kinetic Core Index Error Logger -->
+    <logger name="com.kineticdata.core.loggers.index-error-logger" additivity="false">
+        <level value="info"/>
+        <appender-ref ref="index-err-file-appender"/>
+    </logger>
+
+    <!-- Kinetic Core Webhook Error Logger -->
+    <logger name="com.kineticdata.core.loggers.webhooks" additivity="false">
+        <level value="info"/>
+        <appender-ref ref="webhook-err-file-appender"/>
+    </logger>
+    
+    <!-- Override Spring Ancestor Logger Levels -->
+    <logger name="com.kineticdata.core.web.exceptions.ExceptionResolver" additivity="false">
+        <level value="warn"/>
+        <appender-ref ref="app-file-appender"/>
+    </logger>
+    <logger name="com.kineticdata.core.web.filters.SpaceContextFilter" additivity="false">
+        <level value="warn"/>
+        <appender-ref ref="app-file-appender"/>
+    </logger>
+    <logger name="com.kineticdata.core.web.initializers.WebApplicationInitializer" additivity="false">
+        <level value="warn"/>
+        <appender-ref ref="app-file-appender"/>
+    </logger>
+    <logger name="com.kineticdata.core.web.security.CoreAuthenticationFilter" additivity="false">
+        <level value="warn"/>
+        <appender-ref ref="app-file-appender"/>
+    </logger>
+    <logger name="com.kineticdata.core.web.security.CoreAuthenticationHandler" additivity="false">
+        <level value="warn"/>
+        <appender-ref ref="app-file-appender"/>
+    </logger>
+    <logger name="com.kineticdata.core.web.security.CoreAuthenticationProvider" additivity="false">
+        <level value="warn"/>
+        <appender-ref ref="app-file-appender"/>
+    </logger>
+    <logger name="com.kineticdata.core.web.security.CoreBasicAuthenticationFilter" additivity="false">
+        <level value="warn"/>
+        <appender-ref ref="app-file-appender"/>
+    </logger>
+    <logger name="com.kineticdata.core.web.security.SpaceAwareHttpSessionSecurityContextRepository" additivity="false">
+        <level value="warn"/>
+        <appender-ref ref="app-file-appender"/>
+    </logger>
+    
+    <!-- Root Logger -->
+    <root>
+        <level value="warn"/>
+        <appender-ref ref="app-file-appender"/>
+    </root>
+
+</log4j:configuration>
