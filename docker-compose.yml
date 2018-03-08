@@ -6,10 +6,10 @@ services:
         - "8181:8181"
       volumes:
         - ./app-config/docker-configuration/target/docker-configuration-1.0.0-SNAPSHOT.jar:/docker-configuration.jar
-      command: java -jar /docker-configuration.jar
+      command: java -Xmx256m -jar /docker-configuration.jar
 
     nginx:
-      image: nginx
+      image: nginx:alpine
       ports:
         - "8080:8080"
       volumes:
@@ -18,71 +18,105 @@ services:
       restart: always
 
     postgres:
-      image: postgres
+      image: postgres:10-alpine
       ports:
         - "5432:5432"
       volumes:
         - ./app-data/postgres/data:/var/lib/postgresql/data
         - ./app-config/postgres/init-scripts:/docker-entrypoint-initdb.d
       environment:
-        - "POSTGRES_USER=kinetictask_user"
-        - "POSTGRES_PASSWORD=K!netic1"
-        - "PGPASSWORD=K!netic1"
-        - "POSTGRES_DB=TASK_DATABASE"
+        POSTGRES_USER: "kinetictask_user"
+        POSTGRES_PASSWORD: "K!netic1"
+        PGPASSWORD: "K!netic1"
+        POSTGRES_DB: "TASK_DATABASE"
 
     cassandra:
-      image: cassandra
+      build:
+        context: app-config/cassandra/
+        dockerfile: Dockerfile
+        args:
+          IMAGE_VERSION: "3.11.2"
       ports:
         - "9042:9042"
       volumes:
         - ./app-data/cassandra/data:/var/lib/cassandra
         - ./app-data/cassandra/logs:/var/log/cassandra
+      environment:
+        HEAP_NEWSIZE: "32M"
+        MAX_HEAP_SIZE: "2048M"
 
     task:
       build:
-        context: './app-config'
-        dockerfile: './kinetic-task/Dockerfile'
+        context: app-config/kinetic-task/
+        dockerfile: Dockerfile
+        args:
+          IMAGE_VERSION: "8.5-jre8-alpine"
+          VERSION: "4.2.2"
       ports:
         - "8000:8080"
       volumes:
         - ./app-config/kinetic-task/postgres.properties:/home/dataDirectory/config/adapter.properties
         - ./app-data/kinetic-task/data:/home/dataDirectory
       environment:
-          - "JAVA_OPTS=-Dcom.kineticdata.task.dataDirectory=/home/dataDirectory"
-      command: '/wait-for-port.sh postgres 5432 catalina.sh run'
+        JAVA_OPTS: "-Xmx768m -Dcom.kineticdata.task.dataDirectory=/home/dataDirectory"
+      command: 'wait-for-port.sh postgres 5432 setup.sh'
 
     request-ce:
       build:
         context: './app-config/'
         dockerfile: './kinetic-request-ce/Dockerfile'
+        args:
+          IMAGE_VERSION: "8.5-jre8-alpine"
+          VERSION: "2.0.4"
       ports:
         - "8001:8080"
       volumes:
         - ./app-data/kinetic-request-ce/logs:/home/dataDirectory/logs
       environment:
-        - "JAVA_OPTS=-Dcom.kineticdata.core.dataDirectory=/home/dataDirectory"
+        JAVA_OPTS: "-Xmx512m -Dcom.kineticdata.core.dataDirectory=/home/dataDirectory"
       command: '/wait-for-port-to-close.sh configuration 8181 catalina.sh run'
 
     bridgehub:
       build:
         context: './app-config/'
         dockerfile: './kinetic-bridgehub/Dockerfile'
+        args:
+          IMAGE_VERSION: "8.5-jre8-alpine"
+          VERSION: "1.2.0"
       ports:
         - "8002:8080"
       volumes:
         - ./app-data/kinetic-bridgehub/data:/home/dataDirectory
       environment:
-          - "JAVA_OPTS=-Dcom.kineticdata.bridgehub.dataDirectory=/home/dataDirectory -Dcom.kineticdata.bridgehub.clustering.contactpoints=cassandra -Dcom.kineticdata.bridgehub.clustering.keyspace=kinetic_bridgehub"
+        JAVA_OPTS: "-Xmx384m -Dcom.kineticdata.bridgehub.dataDirectory=/home/dataDirectory -Dcom.kineticdata.bridgehub.clustering.contactpoints=cassandra -Dcom.kineticdata.bridgehub.clustering.keyspace=kinetic_bridgehub"
       command: '/wait-for-port-to-close.sh configuration 8181 catalina.sh run'
 
     filehub:
       build:
         context: './app-config/'
         dockerfile: './kinetic-filehub/Dockerfile'
+        args:
+          IMAGE_VERSION: "8.5-jre8-alpine"
+          VERSION: "1.2.0"
       ports:
         - "8003:8080"
       volumes:
         - ./app-data/kinetic-filehub/data:/home/dataDirectory
+        - ./app-data/kinetic-filehub/files:/home/filesDirectory
       environment:
-          - "JAVA_OPTS=-Dcom.kineticdata.filehub.dataDirectory=/home/dataDirectory -Dcom.kineticdata.filehub.clustering.contactpoints=cassandra -Dcom.kineticdata.filehub.clustering.keyspace=kinetic_filehub"
+        JAVA_OPTS: "-Xmx256m -Dcom.kineticdata.filehub.dataDirectory=/home/dataDirectory -Dcom.kineticdata.filehub.clustering.contactpoints=cassandra -Dcom.kineticdata.filehub.clustering.keyspace=kinetic_filehub"
       command: '/wait-for-port-to-close.sh configuration 8181 catalina.sh run'
+
+    provisioner:
+      build:
+        context: app-config/docker-provisioner/
+        dockerfile: Dockerfile
+        args:
+          IMAGE_VERSION: "9.1.9.0-jdk-alpine"
+      environment:
+        JAVAXMX: "256m"
+        SPACE_NAME: "Playground"
+        SPACE_SLUG: "playground"
+        IMPORT_OVERWRITE: "false"
+        IMPORT_TYPE: "all"
+      command: 'wait-until-ready.sh configuration 8181 setup.sh'

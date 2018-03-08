@@ -1,11 +1,15 @@
-FROM tomcat
-RUN apt-get update; \
-  apt-get install -y netcat
+ARG IMAGE_VERSION=8.5-jre8-alpine
+FROM tomcat:${IMAGE_VERSION}
 
-# Add the shell script used to determine when the postgres database is properly running/configured
-# and ready for a connection
-COPY ./wait-for-port.sh /wait-for-port.sh
-RUN chmod +x /wait-for-port.sh
+RUN apk update \
+  && apk add unzip
+
+# Copy all files
+COPY files/ /
+RUN chmod +x /usr/local/bin/*.sh
 
 ARG VERSION=4.2.2
-ADD https://s3.amazonaws.com/kineticdata.com/downloads/kinetic-task/${VERSION}/kinetic-task.war /usr/local/tomcat/webapps/kinetic-task.war
+ADD https://s3.amazonaws.com/kineticdata.com/downloads/kinetic-task/${VERSION}/kinetic-task.war /tmp/kinetic-task.war
+
+# execute /usr/local/bin/setup.sh
+CMD [ "sh", "-c", "setup.sh" ]

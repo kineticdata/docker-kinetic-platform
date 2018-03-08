@@ -1,0 +1,61 @@
+# SDK log level (off | info | debug | trace)
+sdk_log_level: "trace"
+
+# Properties for the Platform
+platform:
+  task_source_name: "Kinetic Platform"
+
+# Properties for the Kinetic Request CE Source
+ce:
+  server: "http://request-ce:8080/kinetic"
+  system_credentials:
+    username: "admin"
+    password: "admin"
+  space_admin_credentials:
+    username: "kdadmin"
+    password: "admin"
+  space_integration_credentials:
+    username: "integration.user"
+    display_name: "Integration User"
+  task_source_name: "Kinetic Request CE"
+  filestore:
+    type: "Local"
+    directory: "/home/filesDirectory"
+
+# Properties for Kinetic Task
+task:
+  server: "http://task:8080/kinetic-task"
+  credentials:
+    username: "admin"
+    password: "admin"
+
+# Properties for Kinetic Bridgehub
+bridgehub:
+  server: "http://bridgehub:8080/kinetic-bridgehub"
+  credentials:
+    username: "admin"
+    password: "admin"
+
+# Properties for Kinetic Filehub
+filehub:
+  server: "http://filehub:8080/kinetic-filehub"
+  credentials:
+    username: "admin"
+    password: "admin"
+
+# Kinetic Data SMTP Info (Set on SMTP Handler)
+smtp:
+  server: "smtp.gmail.com"
+  port: "25"
+  tls: "true"
+  username: ""
+  password: ""
+
+# Kinetic Task kinetic_request_ce_notification_template_send_v1 handler
+notification_template_handler:
+  smtp_server: "smtp.gmail.com"
+  smtp_port: "25"
+  smtp_tls: "true"
+  smtp_username: ""
+  smtp_password: ""
+  smtp_from_address: ""

@@ -1,6 +1,5 @@
-FROM tomcat
-RUN apt-get update; \
-  apt-get install -y netcat
+ARG IMAGE_VERSION=8.5-jre8-alpine
+FROM tomcat:${IMAGE_VERSION}
 
 # Add the shell script used to determine when the cassandra database is properly running/configured
 # and ready for a connection
