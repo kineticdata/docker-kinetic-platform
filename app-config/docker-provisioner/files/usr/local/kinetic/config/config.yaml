@@ -1,6 +1,3 @@
-# SDK log level (off | info | debug | trace)
-sdk_log_level: "trace"
-
 # Properties for the Platform
 platform:
   task_source_name: "Kinetic Platform"

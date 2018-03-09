@@ -11,6 +11,7 @@ ENV JAVAXMX="256m"
 ENV KINETIC_PLATFORM_DIR=/usr/local/kinetic
 
 # platform environment variables
+ENV SDK_LOG_LEVEL="info"
 ENV SPACE_NAME="Playground"
 ENV SPACE_SLUG="playground"
 ENV IMPORT_OVERWRITE="false"

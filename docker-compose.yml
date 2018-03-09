@@ -78,6 +78,8 @@ services:
         SPACE_SLUG: "playground"
         IMPORT_OVERWRITE: "false"
         IMPORT_TYPE: "all"
+        # SDK log level (off | info | debug | trace)
+        SDK_LOG_LEVEL: "trace"
 
     task:
       build:
