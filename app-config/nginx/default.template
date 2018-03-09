@@ -1,9 +1,9 @@
 server {
-    listen 8080;
+    listen 80;
 
     location /kinetic {
         proxy_pass         http://request-ce:8080;
-        proxy_redirect     ~^http://(.*?)/(.*?)$ http://$1:8080/$2;
+        proxy_redirect     ~^http://(.*?)/(.*?)$ http://$1:$HOST_PORT/$2;
         proxy_set_header   Host $host;
         proxy_set_header   X-Real-IP $remote_addr;
         proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -12,7 +12,7 @@ server {
 
     location /kinetic-bridgehub {
         proxy_pass         http://bridgehub:8080;
-        proxy_redirect     ~^http://(.*?)/(.*?)$ http://$1:8080/$2;
+        proxy_redirect     ~^http://(.*?)/(.*?)$ http://$1:$HOST_PORT/$2;
         proxy_set_header   Host $host;
         proxy_set_header   X-Real-IP $remote_addr;
         proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -21,7 +21,7 @@ server {
 
     location /kinetic-filehub {
         proxy_pass         http://filehub:8080;
-        proxy_redirect     ~^http://(.*?)/(.*?)$ http://$1:8080/$2;
+        proxy_redirect     ~^http://(.*?)/(.*?)$ http://$1:$HOST_PORT/$2;
         proxy_set_header   Host $host;
         proxy_set_header   X-Real-IP $remote_addr;
         proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -30,7 +30,7 @@ server {
 
     location /kinetic-task {
         proxy_pass         http://task:8080;
-        proxy_redirect     ~^http://(.*?)/(.*?)$ http://$1:8080/$2;
+        proxy_redirect     ~^http://(.*?)/(.*?)$ http://$1:$HOST_PORT/$2;
         proxy_set_header   Host $host;
         proxy_set_header   X-Real-IP $remote_addr;
         proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
