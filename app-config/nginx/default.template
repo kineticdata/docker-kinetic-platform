@@ -45,7 +45,7 @@ server {
     location / {
         # add_header Content-Type text/plain;
         # return 200 'running';
-        return 301 /kinetic;
+        return 302 /kinetic;
     }
 
 }
