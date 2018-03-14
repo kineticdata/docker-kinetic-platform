@@ -1,6 +1,9 @@
+# SDK log level (off | info | debug | trace)
+sdk_log_level: "${SDK_LOG_LEVEL}"
+
 # Properties for the Platform
 platform:
-  task_source_name: "Kinetic Platform"
+  task_source_name: 
 
 # Properties for the Kinetic Request CE Source
 ce:
@@ -25,6 +28,9 @@ task:
   credentials:
     username: "admin"
     password: "admin"
+  oauth:
+    endpoint_server: "${TASK_OAUTH_ENDPOINT_SERVER}"
+    redirect_endpoint_server: "${TASK_OAUTH_REDIRECT_ENDPOINT_SERVER}"
 
 # Properties for Kinetic Bridgehub
 bridgehub:

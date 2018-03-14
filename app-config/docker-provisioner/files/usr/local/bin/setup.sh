@@ -4,7 +4,6 @@ if [ -z "${KINETIC_PLATFORM_DIR}" ]; then
   echo "ERROR: The environment variable \"KINETIC_PLATFORM_DIR\" must be set."
   exit 100
 fi
-
 if [ -z "${SPACE_NAME}" ]; then
   echo "ERROR: The environment variable \"SPACE_NAME\" must be set."
   exit 101
@@ -36,11 +35,14 @@ cd ${KINETIC_PLATFORM_DIR}
 # copy the import-environment script from the updated SDK
 cp vendor/kinetic-sdk-rb/samples/import-export/import-environment.rb .
 
+# update the config.yaml template file with values passed in the environment
+envsubst '$TASK_OAUTH_ENDPOINT_SERVER,$TASK_OAUTH_REDIRECT_ENDPOINT_SERVER,$SDK_LOG_LEVEL' < config/config.yaml > config/runtime.yaml
+
 # run the import driver script
 jruby -J-DXmx${JAVAXMX} import-environment.rb \
   -e platform_template \
   -s ${SPACE_SLUG} \
   -n ${SPACE_NAME} \
-  -c config.yaml \
+  -c runtime.yaml \
   -o ${IMPORT_OVERWRITE} \
   -t ${IMPORT_TYPE}
