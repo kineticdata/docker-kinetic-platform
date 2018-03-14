@@ -26,7 +26,7 @@ RUN chmod +x /usr/local/bin/*.sh
 # set the working directory
 WORKDIR ${KINETIC_PLATFORM_DIR}
 
-Git the kinetic-sdk-rb and platform-template repositories
+# Git the kinetic-sdk-rb and platform-template repositories
 RUN git config --global http.sslVerify false \
   && git clone https://github.com/kineticdata/kinetic-sdk-rb.git vendor/kinetic-sdk-rb \
   && git clone https://github.com/kineticdata/platform-template.git exports/platform_template
