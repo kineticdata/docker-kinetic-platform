@@ -41,7 +41,12 @@ services:
     nginx:
       image: nginx:alpine
       restart: always
-      command: /bin/sh -c "envsubst '$$HOST_PORT' < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+      command: /bin/sh -c "echo 'Nginx starting' && envsubst '$$HOST_PORT' < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+      depends_on:
+        - request-ce
+        - task
+        - bridgehub
+        - filehub
       healthcheck:
         test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost/health || exit 1"]
         interval: 30s
@@ -73,9 +78,9 @@ services:
         dockerfile: Dockerfile
         args:
           IMAGE_VERSION: "9.1.9.0-jdk-alpine"
-      command: 'wait-until-ready.sh configuration 8181 setup.sh'
+      command: 'wait-until-ready.sh setup.sh'
       depends_on:
-        - "request-ce"
+        - request-ce
         - task
         - bridgehub
         - filehub
@@ -120,7 +125,7 @@ services:
           VERSION: "2.0.4"
       command: '/wait-for-port-to-close.sh configuration 8181 catalina.sh run'
       depends_on:
-        - cassandra
+        - configuration
       environment:
         JAVA_OPTS: "-Xmx512m -Dcom.kineticdata.core.dataDirectory=/home/dataDirectory"
       healthcheck:
@@ -140,7 +145,7 @@ services:
           VERSION: "1.2.0"
       command: '/wait-for-port-to-close.sh configuration 8181 catalina.sh run'
       depends_on:
-        - cassandra
+        - configuration
       environment:
         JAVA_OPTS: "-Xmx384m -Dcom.kineticdata.bridgehub.dataDirectory=/home/dataDirectory -Dcom.kineticdata.bridgehub.clustering.contactpoints=cassandra -Dcom.kineticdata.bridgehub.clustering.keyspace=kinetic_bridgehub"
       healthcheck:
@@ -160,7 +165,7 @@ services:
           VERSION: "1.2.0"
       command: '/wait-for-port-to-close.sh configuration 8181 catalina.sh run'
       depends_on:
-        - cassandra
+        - configuration
       environment:
         JAVA_OPTS: "-Xmx256m -Dcom.kineticdata.filehub.dataDirectory=/home/dataDirectory -Dcom.kineticdata.filehub.clustering.contactpoints=cassandra -Dcom.kineticdata.filehub.clustering.keyspace=kinetic_filehub"
       healthcheck:
