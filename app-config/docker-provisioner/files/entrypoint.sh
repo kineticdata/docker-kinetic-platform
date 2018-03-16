@@ -35,8 +35,14 @@ cd ${KINETIC_PLATFORM_DIR}
 # copy the import-environment script from the updated SDK
 cp vendor/kinetic-sdk-rb/samples/import-export/import-environment.rb .
 
-# update the config.yaml template file with values passed in the environment
-envsubst '$TASK_OAUTH_ENDPOINT_SERVER,$TASK_OAUTH_REDIRECT_ENDPOINT_SERVER,$SDK_LOG_LEVEL' < config/config.yaml > config/runtime.yaml
+# update the config.yaml template file with specific environment variables
+envsubst '
+${TASK_OAUTH_ENDPOINT_SERVER}
+${TASK_OAUTH_REDIRECT_ENDPOINT_SERVER}
+${SDK_LOG_LEVEL}
+${SPACE_USER_USERNAME}
+${SPACE_USER_PASSWORD}
+' < config/config.yaml > config/runtime.yaml
 
 # run the import driver script
 jruby -J-DXmx${JAVAXMX} import-environment.rb \
@@ -46,3 +52,7 @@ jruby -J-DXmx${JAVAXMX} import-environment.rb \
   -c runtime.yaml \
   -o ${IMPORT_OVERWRITE} \
   -t ${IMPORT_TYPE}
+
+echo -e "\n-------------------------------------------"
+echo -e "\tThe \"${SPACE_NAME}\" space is ready!"
+echo -e "--------------------------------------------\n"

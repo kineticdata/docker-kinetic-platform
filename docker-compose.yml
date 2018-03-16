@@ -76,15 +76,13 @@ services:
         - bridgehub
         - filehub
       environment:
-        JAVAXMX: "256m"
-        SPACE_NAME: "Playground"
-        SPACE_SLUG: "playground"
-        IMPORT_OVERWRITE: "false"
-        IMPORT_TYPE: "all"
-        TASK_OAUTH_ENDPOINT_SERVER: "http://localhost:8080/kinetic"
-        TASK_OAUTH_REDIRECT_ENDPOINT_SERVER: "http://localhost:8080/kinetic-task"
-        # SDK log level (off | info | debug | trace)
-        SDK_LOG_LEVEL: "trace"
+        SDK_LOG_LEVEL: trace
+        SPACE_NAME: Playground
+        SPACE_SLUG: playground
+        SPACE_USER_USERNAME: kdadmin
+        SPACE_USER_PASSWORD: admin
+        TASK_OAUTH_ENDPOINT_SERVER: http://localhost:8080/kinetic
+        TASK_OAUTH_REDIRECT_ENDPOINT_SERVER: http://localhost:8080/kinetic-task
 
     task:
       build:
@@ -92,8 +90,8 @@ services:
         dockerfile: Dockerfile
         args:
           IMAGE_VERSION: "8.5-jre8-alpine"
-          VERSION: "4.2.2"
-      command: '/wait-for-port.sh postgres 5432 catalina.sh run'
+          VERSION: "4.3.0-SNAPSHOT"
+      command: '/wait-for-port.sh postgres 5432 /entrypoint.sh'
       depends_on:
         - postgres
       environment:

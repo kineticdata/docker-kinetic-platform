@@ -12,8 +12,8 @@ ce:
     username: "admin"
     password: "admin"
   space_admin_credentials:
-    username: "kdadmin"
-    password: "admin"
+    username: "${SPACE_USER_USERNAME}"
+    password: "${SPACE_USER_PASSWORD}"
   space_integration_credentials:
     username: "integration.user"
     display_name: "Integration User"
