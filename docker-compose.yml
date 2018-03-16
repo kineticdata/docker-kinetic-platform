@@ -9,13 +9,6 @@ services:
       environment:
         HEAP_NEWSIZE: "32M"
         MAX_HEAP_SIZE: "2048M"
-      healthcheck:
-        test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
-        interval: 30s
-        timeout: 10s
-        retries: 5
-      # ports:
-      #   - "9042:9042"
       volumes:
         - ./app-data/cassandra/data:/var/lib/cassandra
         - ./app-data/cassandra/logs:/var/log/cassandra
@@ -32,8 +25,6 @@ services:
         interval: 30s
         timeout: 10s
         retries: 5
-      # ports:
-      #   - "5432:5432"
       volumes:
         - ./app-data/postgres/data:/var/lib/postgresql/data
         - ./app-config/postgres/init-scripts:/docker-entrypoint-initdb.d
@@ -78,7 +69,7 @@ services:
         dockerfile: Dockerfile
         args:
           IMAGE_VERSION: "9.1.9.0-jdk-alpine"
-      command: 'wait-until-ready.sh setup.sh'
+      command: '/wait-until-ready.sh /entrypoint.sh'
       depends_on:
         - request-ce
         - task
@@ -102,24 +93,19 @@ services:
         args:
           IMAGE_VERSION: "8.5-jre8-alpine"
           VERSION: "4.2.2"
-      command: 'wait-for-port.sh postgres 5432 setup.sh'
+      command: '/wait-for-port.sh postgres 5432 catalina.sh run'
       depends_on:
         - postgres
       environment:
         JAVA_OPTS: "-Xmx768m -Dcom.kineticdata.task.dataDirectory=/home/dataDirectory"
-      healthcheck:
-        test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8080/kinetic-task/app/login || exit 1"]
-        interval: 90s
-        timeout: 10s
-        retries: 3
       volumes:
         - ./app-config/kinetic-task/postgres.properties:/home/dataDirectory/config/adapter.properties
         - ./app-data/kinetic-task/data:/home/dataDirectory
 
     request-ce:
       build:
-        context: './app-config/'
-        dockerfile: './kinetic-request-ce/Dockerfile'
+        context: app-config/kinetic-request-ce/
+        dockerfile: Dockerfile
         args:
           IMAGE_VERSION: "8.5-jre8-alpine"
           VERSION: "2.0.4"
@@ -128,18 +114,13 @@ services:
         - configuration
       environment:
         JAVA_OPTS: "-Xmx512m -Dcom.kineticdata.core.dataDirectory=/home/dataDirectory"
-      healthcheck:
-        test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8080/kinetic/app || exit 1"]
-        interval: 90s
-        timeout: 10s
-        retries: 3
       volumes:
         - ./app-data/kinetic-request-ce/logs:/home/dataDirectory/logs
 
     bridgehub:
       build:
-        context: './app-config/'
-        dockerfile: './kinetic-bridgehub/Dockerfile'
+        context: app-config/kinetic-bridgehub/
+        dockerfile: Dockerfile
         args:
           IMAGE_VERSION: "8.5-jre8-alpine"
           VERSION: "1.2.0"
@@ -148,18 +129,13 @@ services:
         - configuration
       environment:
         JAVA_OPTS: "-Xmx384m -Dcom.kineticdata.bridgehub.dataDirectory=/home/dataDirectory -Dcom.kineticdata.bridgehub.clustering.contactpoints=cassandra -Dcom.kineticdata.bridgehub.clustering.keyspace=kinetic_bridgehub"
-      healthcheck:
-        test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8080/kinetic-bridgehub/app/login || exit 1"]
-        interval: 90s
-        timeout: 10s
-        retries: 3
       volumes:
         - ./app-data/kinetic-bridgehub/data:/home/dataDirectory
 
     filehub:
       build:
-        context: './app-config/'
-        dockerfile: './kinetic-filehub/Dockerfile'
+        context: app-config/kinetic-filehub/
+        dockerfile: Dockerfile
         args:
           IMAGE_VERSION: "8.5-jre8-alpine"
           VERSION: "1.2.0"
@@ -168,11 +144,6 @@ services:
         - configuration
       environment:
         JAVA_OPTS: "-Xmx256m -Dcom.kineticdata.filehub.dataDirectory=/home/dataDirectory -Dcom.kineticdata.filehub.clustering.contactpoints=cassandra -Dcom.kineticdata.filehub.clustering.keyspace=kinetic_filehub"
-      healthcheck:
-        test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8080/kinetic-filehub/app/login || exit 1"]
-        interval: 90s
-        timeout: 10s
-        retries: 3
       volumes:
         - ./app-data/kinetic-filehub/data:/home/dataDirectory
         - ./app-data/kinetic-filehub/files:/home/filesDirectory

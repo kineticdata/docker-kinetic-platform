@@ -19,17 +19,16 @@ ENV IMPORT_TYPE="all"
 ENV TASK_OAUTH_ENDPOINT_SERVER="http://localhost:8080/kinetic"
 ENV TASK_OAUTH_REDIRECT_ENDPOINT_SERVER: "http://localhost:8080/kinetic-task"
 
-# Copy all files
+# Copy files
 COPY files/ /
-RUN chmod +x /usr/local/bin/*.sh
+RUN chmod +x /*.sh
 
 # set the working directory
 WORKDIR ${KINETIC_PLATFORM_DIR}
 
 # Git the kinetic-sdk-rb and platform-template repositories
-RUN git config --global http.sslVerify false \
-  && git clone https://github.com/kineticdata/kinetic-sdk-rb.git vendor/kinetic-sdk-rb \
+RUN git clone https://github.com/kineticdata/kinetic-sdk-rb.git vendor/kinetic-sdk-rb \
   && git clone https://github.com/kineticdata/platform-template.git exports/platform_template
 
-# execute /usr/local/bin/setup.sh
-CMD [ "sh", "-c", "setup.sh" ]
+# execute /entrypoint.sh
+CMD [ "sh", "-c", "/entrypoint.sh" ]

@@ -1,7 +1,0 @@
-files/usr/local/kinetic/config/*
-files/usr/local/kinetic/exports/*
-files/usr/local/kinetic/vendor/*
-
-!files/usr/local/kinetic/config/config.yaml
-!files/usr/local/kinetic/exports/.keep
-!files/usr/local/kinetic/vendor/.keep
