@@ -1,6 +1,8 @@
 server {
     listen 80;
 
+    client_max_body_size 10m;
+
     location /kinetic {
         proxy_pass         http://request-ce:8080;
         proxy_redirect     ~^http://(.*?)[:\d]*/(.*?)$ http://$1:$HOST_PORT/$2;
