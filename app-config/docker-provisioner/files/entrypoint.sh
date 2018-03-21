@@ -53,6 +53,6 @@ jruby -J-DXmx${JAVAXMX} import-environment.rb \
   -o ${IMPORT_OVERWRITE} \
   -t ${IMPORT_TYPE}
 
-echo -e "\n-------------------------------------------"
-echo -e "\tThe \"${SPACE_NAME}\" space is ready!"
-echo -e "--------------------------------------------\n"
+echo -e "\n---------------------------------------------------------------------"
+echo -e "\tThe \"${SPACE_NAME}\" space is ready at http://localhost:${HOST_PORT}"
+echo -e "---------------------------------------------------------------------\n"

@@ -4,6 +4,8 @@ FROM jruby:${IMAGE_VERSION}
 RUN apk update \
   && apk add ca-certificates gettext git
 
+ENV HOST_PORT=8080
+
 # JRuby options
 ENV JAVAXMX="256m"
 

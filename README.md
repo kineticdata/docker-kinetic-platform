@@ -25,11 +25,7 @@ Access applications on the host server. Assuming this is running on your local m
 * <http://localhost:8080/kinetic-filehub>
 * <http://localhost:8080/kinetic-bridgehub>
 
-The host port can be modified in the nginx service by changing the HOST_PORT environment variable to an open port on the host machine. If you change this value, you must also update the following properties as well:
-
-* nginx.ports
-* provisioner.environment.TASK_OAUTH_ENDPOINT_SERVER
-* provisioner.environment.TASK_OAUTH_REDIRECT_ENDPOINT_SERVER
+The host port can be modified in the nginx service by changing the HOST_PORT environment variable to an open port on the host machine. This property can be found in the accompanying `.env` file.
 
 Assuming you change the HOST_PORT environment variable and port mapping to 8888 because you already have a service running on the same host using port 8080, the updated paths would be:
 

@@ -43,14 +43,8 @@ services:
         interval: 30s
         timeout: 10s
         retries: 3
-      environment:
-        # If changing host port, make sure to change in ports mapping below, and
-        # in the following values:
-          # provisioner.environment.TASK_OAUTH_ENDPOINT_SERVER
-          # provisioner.environment.TASK_OAUTH_REDIRECT_ENDPOINT_SERVER
-        HOST_PORT: "8080"
       ports:
-        - "8080:80"
+        - "${HOST_PORT}:80"
       volumes:
         - ./app-config/nginx/default.template:/etc/nginx/conf.d/default.template
         - ./app-data/nginx/logs:/var/log/nginx
@@ -76,13 +70,14 @@ services:
         - bridgehub
         - filehub
       environment:
+        HOST_PORT: "${HOST_PORT}"
         SDK_LOG_LEVEL: trace
         SPACE_NAME: Playground
         SPACE_SLUG: playground
         SPACE_USER_USERNAME: kdadmin
         SPACE_USER_PASSWORD: admin
-        TASK_OAUTH_ENDPOINT_SERVER: http://localhost:8080/kinetic
-        TASK_OAUTH_REDIRECT_ENDPOINT_SERVER: http://localhost:8080/kinetic-task
+        TASK_OAUTH_ENDPOINT_SERVER: http://localhost:${HOST_PORT}/kinetic
+        TASK_OAUTH_REDIRECT_ENDPOINT_SERVER: http://localhost:${HOST_PORT}/kinetic-task
 
     task:
       build:
