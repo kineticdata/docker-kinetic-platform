@@ -21,6 +21,7 @@ RUN mkdir -p /tmp/kinetic/app/shared-bundles/hydrogen-v1 \
   && echo 'Gitting bundles' \
   && git clone https://github.com/kineticdata/request-ce-bundle-webpack.git -b features/v2 webpack \
   && git clone https://github.com/KineticCommunity/request-ce-kapp-admin.git -b master admin \
+  && git clone https://github.com/KineticCommunity/request-ce-kapp-admin.git -b master space \
   && echo 'Add bundles to web app' \
   && cd /tmp/kinetic \
   && zip -r /tmp/kinetic.war app \
