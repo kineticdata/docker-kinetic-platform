@@ -4,7 +4,7 @@ Run the entire Kinetic Data platform in Docker.
 
 ## Docker Host
 
-Ensure your docker host is configured with at least 4GB of memory, and at least 4 CPUs.
+Ensure your docker host is configured with at least 4GB of memory, and at least 6 CPUs.
 
 1.  Open Docker preferences
 2.  Click on the Advanced tab
