@@ -48,17 +48,17 @@ filehub:
 
 # Kinetic Data SMTP Info (Set on SMTP Handler)
 smtp:
-  server: "smtp.gmail.com"
-  port: "25"
+  server: "mailer"
+  port: "587"
   tls: "true"
   username: ""
   password: ""
 
 # Kinetic Task kinetic_request_ce_notification_template_send_v1 handler
 notification_template_handler:
-  smtp_server: "smtp.gmail.com"
-  smtp_port: "25"
+  smtp_server: "mailer"
+  smtp_port: "587"
   smtp_tls: "true"
   smtp_username: ""
   smtp_password: ""
-  smtp_from_address: ""
+  smtp_from_address: "no-reply"

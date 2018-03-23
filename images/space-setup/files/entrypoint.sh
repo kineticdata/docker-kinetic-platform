@@ -27,13 +27,16 @@ fi
 
 cd ${KINETIC_PLATFORM_DIR}/vendor/kinetic-sdk-rb \
   && git pull origin master \
-  && cd ${KINETIC_PLATFORM_DIR}/exports/platform_template \
+  && cd ${KINETIC_PLATFORM_DIR}/exports/platform-template \
   && git pull origin master
 
 cd ${KINETIC_PLATFORM_DIR}
 
 # copy the import-environment script from the updated SDK
 cp vendor/kinetic-sdk-rb/samples/import-export/import-environment.rb .
+
+# copy additional handlers
+cp exports/handlers.d/* exports/platform-template/task/handlers/
 
 # update the config.yaml template file with specific environment variables
 envsubst '
@@ -46,7 +49,7 @@ ${SPACE_USER_PASSWORD}
 
 # run the import driver script
 jruby -J-DXmx${JAVAXMX} import-environment.rb \
-  -e platform_template \
+  -e platform-template \
   -s ${SPACE_SLUG} \
   -n ${SPACE_NAME} \
   -c runtime.yaml \

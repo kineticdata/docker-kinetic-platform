@@ -36,7 +36,7 @@ Assuming you change the HOST_PORT environment variable and port mapping to 8888 
 
 ## Persisting Data
 
-By default, all runtime data created by the various applications are persisted to the `app-data` directory within this repository location. This location may be changed by updating the volume paths in the `docker-compose.yml` file.
+By default, all runtime data created by the various applications are persisted to the `data` directory within this repository location. This location may be changed by updating the volume paths in the `docker-compose.yml` file.
 
 Some examples of runtime data are:
 
