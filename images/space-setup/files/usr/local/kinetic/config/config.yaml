@@ -61,4 +61,12 @@ notification_template_handler:
   smtp_tls: "true"
   smtp_username: ""
   smtp_password: ""
-  smtp_from_address: "no-reply"
+  smtp_from_address: "no-reply@kineticdata.com"
+
+# Send SMTP Email tree
+# send_smtp_email_tree:
+#   Fix references to ENV['space_slug']
+#   Configure From Email Address - Input - currently set to wally@kinops.io
+#   Configure Web Server - Input - currently set to <%="https://kinops.io/#{ENV['space_slug']}/kinetic-task"%>
+
+  

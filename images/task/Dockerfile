@@ -8,11 +8,8 @@ RUN apk update \
 COPY files/ /
 RUN chmod +x /*.sh
 
-ARG VERSION=4.3.0-SNAPSHOT
-ADD https://s3.amazonaws.com/kineticdata.com/downloads/kinetic-task/${VERSION}/kinetic-task.war /tmp/kinetic-task.war
+ARG VERSION=4.2.3-SNAPSHOT
+ADD https://s3.amazonaws.com/kineticdata.com/downloads/kinetic-task/${VERSION}/kinetic-task.war ${CATALINA_HOME}/webapps/kinetic-task.war
 
 HEALTHCHECK --interval=90s --timeout=10s --start-period=30s --retries=3 \
   CMD [ "/bin/sh", "-c", "wget --quiet --tries=1 --spider http://localhost:8080/kinetic-task/app/login || exit 1" ]
-
-# execute /entrypoint.sh
-CMD [ "sh", "-c", "/entrypoint.sh" ]
