@@ -1,8 +1,7 @@
 ARG IMAGE_VERSION=8.5-jre8-alpine
 FROM tomcat:${IMAGE_VERSION}
 
-RUN apk update \
-  && apk add unzip zip
+RUN apk --no-cache add unzip zip
 
 # Copy files
 COPY files/ /

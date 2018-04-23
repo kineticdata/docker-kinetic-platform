@@ -1,8 +1,7 @@
 ARG IMAGE_VERSION=9.1.9.0-jdk-alpine
 FROM jruby:${IMAGE_VERSION}
 
-RUN apk update \
-  && apk add ca-certificates gettext git
+RUN apk --no-cache add ca-certificates gettext git
 
 ENV HOST_PORT=8080
 
