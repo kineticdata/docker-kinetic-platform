@@ -7,7 +7,7 @@ RUN apk --no-cache add unzip zip
 COPY files/ /
 RUN chmod +x /*.sh
 
-ARG VERSION=4.2.3-SNAPSHOT
+ARG VERSION=4.3.0
 ADD https://s3.amazonaws.com/kineticdata.com/downloads/kinetic-task/${VERSION}/kinetic-task.war ${CATALINA_HOME}/webapps/kinetic-task.war
 
 HEALTHCHECK --interval=90s --timeout=10s --start-period=30s --retries=3 \
