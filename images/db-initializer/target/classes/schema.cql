@@ -21,9 +21,7 @@ CREATE TABLE IF NOT EXISTS datastore_submissions_index_entries (
   space_id timeuuid,
   datastore_id timeuuid,
   submission_id timeuuid,
-  submission_version_id timeuuid,
   index_definition_id timeuuid,
-  id timeuuid,
   core_state text,
   value text,
   PRIMARY KEY ((space_id, datastore_id, index_definition_id), core_state, value, submission_id)
@@ -43,7 +41,6 @@ CREATE TABLE IF NOT EXISTS datastore_submissions_unique_index_entries (
   submission_id timeuuid,
   submission_version_id timeuuid,
   index_definition_id timeuuid,
-  id timeuuid,
   value text,
   PRIMARY KEY ((space_id, datastore_id), index_definition_id, value)
 )
@@ -59,7 +56,7 @@ WITH CLUSTERING ORDER BY (index_definition_id ASC, value ASC)
 /*------------------------------------------------------------------------------*
  * SOURCE OF TRUTH TABLE
  *
- * The main table that contains the full submission record, including answer
+ * The main table that contains the full submission record, including answer 
  * values and Kapp specific variable data.  All records in the following index
  * table are generated from this data.
  *------------------------------------------------------------------------------*/
@@ -91,19 +88,19 @@ CREATE TABLE IF NOT EXISTS submissions (
 /*------------------------------------------------------------------------------*
  * SUBMISSION INDEX TABLE
  *
- * The following table is used as an index for searching submission records.
- * This tables contain the id of the 'submissions' table source record from
- * which the row was generated, and only the necessary columns that compose the
+ * The following table is used as an index for searching submission records. 
+ * This tables contain the id of the 'submissions' table source record from 
+ * which the row was generated, and only the necessary columns that compose the 
  * primary key.
  *
  *  scope_type      The scope type of the index (Kapp, Type, Form, Submission).
  *  scope_id        The id of the record that the search is being scoped to.
  *  core_state      The state of the submission (Draft, Submitted, Closed).
- *  timeline        The timeline used for ordering (closedAt, createdAt,
+ *  timeline        The timeline used for ordering (closedAt, createdAt, 
  *                  submittedAt, or updatedAt).
  *  bucket          Draft/Submitted submissions are '-', Closed are 'YYYY-MM'.
  *  key             Reference to the data value ('-' for "all submissions by"
- *                  queries, 'createdBy' etc for submission properties, and
+ *                  queries, 'createdBy' etc for submission properties, and 
  *                  'value[f1]' etc for submission field values).
  *  value           The first 256 characters of the submission value.
  *  timestamp       The submission timestamp value associated to the timeline.
@@ -121,7 +118,7 @@ CREATE TABLE IF NOT EXISTS submissions_index (
     timestamp timestamp,
     submission_id timeuuid,
     PRIMARY KEY ((scope_type, scope_id, core_state, timeline, bucket, key), value, timestamp, submission_id)
-)
+) 
 WITH CLUSTERING ORDER BY (value DESC, timestamp DESC, submission_id DESC)
  AND COMPACTION={
     'sstable_size_in_mb': '256',
@@ -139,7 +136,7 @@ CREATE TABLE IF NOT EXISTS submission_activities (
     id timeuuid, version_id timeuuid,
     created_at timestamp, created_by text, updated_at timestamp, updated_by text,
     space_id timeuuid,
-    submission_id timeuuid,
+    submission_id timeuuid, 
     content text,
     PRIMARY KEY ((space_id, submission_id), id)
 );
@@ -306,7 +303,7 @@ CREATE TABLE IF NOT EXISTS dependency_references_by_type (
     space_id timeuuid,
     type text,
     PRIMARY KEY ((space_id, scope_type, scope_id), type, dependency_id, occurrence_key)
-)
+) 
 WITH CLUSTERING ORDER BY (type ASC, dependency_id ASC, occurrence_key ASC)
 AND COMPACTION={
     'sstable_size_in_mb': '256',
@@ -327,7 +324,7 @@ CREATE TABLE IF NOT EXISTS relationships (
     space_id timeuuid,
     type text,
     PRIMARY KEY ((space_id, scope_type, scope_id, type), self_id, relation_id)
-)
+) 
 WITH CLUSTERING ORDER BY (self_id ASC, relation_id ASC)
 AND COMPACTION={
     'sstable_size_in_mb': '256',
@@ -346,7 +343,7 @@ AND COMPACTION={
 CREATE TABLE IF NOT EXISTS configuration_items_by_id (
     id timeuuid, version_id timeuuid,
     created_at timestamp, created_by text, updated_at timestamp, updated_by text,
-    bucket text,
+    bucket text, 
     name text,
     value text,
     PRIMARY KEY ((bucket), id)
@@ -354,7 +351,7 @@ CREATE TABLE IF NOT EXISTS configuration_items_by_id (
 CREATE TABLE IF NOT EXISTS configuration_items_by_name (
     id timeuuid, version_id timeuuid,
     created_at timestamp, created_by text, updated_at timestamp, updated_by text,
-    bucket text,
+    bucket text, 
     name text,
     value text,
     PRIMARY KEY ((bucket), name)
@@ -382,7 +379,7 @@ CREATE TABLE IF NOT EXISTS spaces_by_slug (
 CREATE TABLE IF NOT EXISTS datastores_by_id (
     id timeuuid, version_id timeuuid,
     created_at timestamp, created_by text, updated_at timestamp, updated_by text,
-    space_id timeuuid,
+    space_id timeuuid, 
     slug text,
     content text,
     page_content text,
@@ -423,7 +420,7 @@ CREATE TABLE IF NOT EXISTS users_by_normalized_username (
 CREATE TABLE IF NOT EXISTS kapps_by_id (
     id timeuuid, version_id timeuuid,
     created_at timestamp, created_by text, updated_at timestamp, updated_by text,
-    space_id timeuuid,
+    space_id timeuuid, 
     slug text,
     content text,
     restoration_token timeuuid,
@@ -443,7 +440,7 @@ CREATE TABLE IF NOT EXISTS kapps_by_slug (
 CREATE TABLE IF NOT EXISTS teams_by_id (
     id timeuuid, version_id timeuuid,
     created_at timestamp, created_by text, updated_at timestamp, updated_by text,
-    space_id timeuuid,
+    space_id timeuuid, 
     slug text,
     content text,
     restoration_token timeuuid,
@@ -463,8 +460,8 @@ CREATE TABLE IF NOT EXISTS teams_by_slug (
 CREATE TABLE IF NOT EXISTS forms_by_id (
     id timeuuid, version_id timeuuid,
     created_at timestamp, created_by text, updated_at timestamp, updated_by text,
-    space_id timeuuid,
-    kapp_id timeuuid,
+    space_id timeuuid, 
+    kapp_id timeuuid, 
     slug text,
     content text,
     page_content text,

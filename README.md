@@ -36,6 +36,20 @@ Assuming you change the HOST_PORT environment variable and port mapping to 8888 
 * <http://localhost:8888/kinetic-filehub>
 * <http://localhost:8888/kinetic-bridgehub>
 
+### Ready
+
+The platform is ready to use when you see the following message in your terminal:
+
+```bash
+space-setup_1     | ---------------------------------------------------------------------
+space-setup_1     | 	The "Playground" space is ready at http://localhost:8080
+space-setup_1     | ---------------------------------------------------------------------
+space-setup_1     | 
+docker-kinetic-platform_space-setup_1 exited with code 0
+```
+
+Open your web browser to <http://localhost:8080> to get started.
+
 ### Warning
 
 The HOST_PORT is used in configuration values to link Request CE with Bridgehub, Filehub, and Task.  If you change this value after the initial run, you will need to update some configuration values with the new HOST_PORT value.

@@ -1,26 +1,3 @@
--- *********************************************************************
--- Database Info
--- *********************************************************************
--- Dialect: com.kineticdata.task.adapters.dbms.KineticPostgreSQLDialect
--- Driver Class: org.postgresql.Driver
--- Product: PostgreSQL (v10.1)
--- Properties: 
---    host: postgres
---    port: 5432
---    database: A_LONG_DATABASE_NAME
---    username: AUSERNAME
---    password: [Sensitive Value]
-
-
--- *********************************************************************
--- Update Database Script
--- *********************************************************************
--- Change Log: com/kineticdata/task/installer/changelog/db.changelog-master.xml
--- Ran at: 2/27/18 7:40 PM
--- Against: AUSERNAME@jdbc:postgresql://postgres:5432/A_LONG_DATABASE_NAME
--- Liquibase version: 3.1.1
--- *********************************************************************
-
 -- Create Database Lock Table
 CREATE TABLE public.db_changelog_locks (ID INT NOT NULL, LOCKED BOOLEAN NOT NULL, LOCKGRANTED TIMESTAMP WITH TIME ZONE, LOCKEDBY VARCHAR(255), CONSTRAINT PK_DB_CHANGELOG_LOCKS PRIMARY KEY (ID));
 
@@ -32,6 +9,14 @@ INSERT INTO public.db_changelog_locks (ID, LOCKED) VALUES (1, FALSE);
 -- Lock Database
 -- Create Database Change Log Table
 CREATE TABLE public.db_changelogs (ID VARCHAR(255) NOT NULL, AUTHOR VARCHAR(255) NOT NULL, FILENAME VARCHAR(255) NOT NULL, DATEEXECUTED TIMESTAMP WITH TIME ZONE NOT NULL, ORDEREXECUTED INT NOT NULL, EXECTYPE VARCHAR(10) NOT NULL, MD5SUM VARCHAR(35), DESCRIPTION VARCHAR(255), COMMENTS VARCHAR(255), TAG VARCHAR(255), LIQUIBASE VARCHAR(20));
+
+-- Create Database Lock Table
+CREATE TABLE public.db_changelog_locks (ID INT NOT NULL, LOCKED BOOLEAN NOT NULL, LOCKGRANTED TIMESTAMP WITH TIME ZONE, LOCKEDBY VARCHAR(255), CONSTRAINT PK_DB_CHANGELOG_LOCKS PRIMARY KEY (ID));
+
+-- Initialize Database Lock Table
+DELETE FROM public.db_changelog_locks;
+
+INSERT INTO public.db_changelog_locks (ID, LOCKED) VALUES (1, FALSE);
 
 -- Changeset com/kineticdata/task/installer/changelog/db.changelog_04.00.00.xml::initial::Kinetic Data
 UPDATE public.db_changelogs SET TAG = 'initial' WHERE DATEEXECUTED = (SELECT MAX(DATEEXECUTED) FROM public.db_changelogs);
@@ -625,8 +610,8 @@ INSERT INTO public.db_changelogs (ID, AUTHOR, FILENAME, DATEEXECUTED, ORDEREXECU
 UPDATE executions SET status='Started'
             WHERE EXISTS (SELECT triggers.id
                             FROM triggers
-                            WHERE triggers.execution_id=executions.id 
-                            AND triggers.node_id='start' 
+                            WHERE triggers.execution_id=executions.id
+                            AND triggers.node_id='start'
                             AND triggers.status IN ('Closed', 'Failed', 'Work In Progress'));
 
 INSERT INTO public.db_changelogs (ID, AUTHOR, FILENAME, DATEEXECUTED, ORDEREXECUTED, MD5SUM, DESCRIPTION, COMMENTS, EXECTYPE, LIQUIBASE) VALUES ('04.00.00-116', 'Kinetic Data', 'com/kineticdata/task/installer/changelog/db.changelog_04.00.00.xml', NOW(), 117, '7:c6834be41ea4289a61c054d4560e7284', 'sql', '', 'EXECUTED', '3.1.1');
@@ -691,10 +676,16 @@ UPDATE public.db_changelogs SET TAG = '04.01.00 (2016-12-12)' WHERE DATEEXECUTED
 INSERT INTO public.db_changelogs (ID, AUTHOR, FILENAME, DATEEXECUTED, ORDEREXECUTED, MD5SUM, DESCRIPTION, COMMENTS, EXECTYPE, LIQUIBASE, TAG) VALUES ('04.01.00-7', 'Kinetic Data', 'com/kineticdata/task/installer/changelog/db.changelog_04.01.00.xml', NOW(), 128, '7:7e17d6eb60fd7123a37fb580434f1008', 'tagDatabase', '', 'EXECUTED', '3.1.1', '04.01.00 (2016-12-12)');
 
 -- Changeset com/kineticdata/task/installer/changelog/db.changelog_04.01.01.xml::04.01.01-1::Kinetic Data
-INSERT INTO public.db_changelogs (ID, AUTHOR, FILENAME, DATEEXECUTED, ORDEREXECUTED, MD5SUM, DESCRIPTION, COMMENTS, EXECTYPE, LIQUIBASE) VALUES ('04.01.01-1', 'Kinetic Data', 'com/kineticdata/task/installer/changelog/db.changelog_04.01.01.xml', NOW(), 129, '7:0943a685495e21eea483f732aa30e364', 'sql', '', 'MARK_RAN', '3.1.1');
+INSERT INTO console_policy_rules (commit_index, console_name, policy_rule_id)
+            VALUES (1, 'Access Keys', (SELECT id FROM policy_rules WHERE policy_rules.name='Member of Administrators' AND type_column='Console Access'));
+
+INSERT INTO public.db_changelogs (ID, AUTHOR, FILENAME, DATEEXECUTED, ORDEREXECUTED, MD5SUM, DESCRIPTION, COMMENTS, EXECTYPE, LIQUIBASE) VALUES ('04.01.01-1', 'Kinetic Data', 'com/kineticdata/task/installer/changelog/db.changelog_04.01.01.xml', NOW(), 129, '7:0943a685495e21eea483f732aa30e364', 'sql', '', 'EXECUTED', '3.1.1');
 
 -- Changeset com/kineticdata/task/installer/changelog/db.changelog_04.01.01.xml::04.01.01-2::Kinetic Data
-INSERT INTO public.db_changelogs (ID, AUTHOR, FILENAME, DATEEXECUTED, ORDEREXECUTED, MD5SUM, DESCRIPTION, COMMENTS, EXECTYPE, LIQUIBASE) VALUES ('04.01.01-2', 'Kinetic Data', 'com/kineticdata/task/installer/changelog/db.changelog_04.01.01.xml', NOW(), 130, '7:5d1bcc9c18defbd73106946de824afa5', 'sql', '', 'MARK_RAN', '3.1.1');
+INSERT INTO console_policy_rules (id, commit_index, console_name, policy_rule_id)
+            VALUES (console_policy_rules_id_seq.NEXTVAL, 1, 'Access Keys', (SELECT id FROM policy_rules WHERE policy_rules.name='Member of Administrators' AND type_column='Console Access'));
+
+INSERT INTO public.db_changelogs (ID, AUTHOR, FILENAME, DATEEXECUTED, ORDEREXECUTED, MD5SUM, DESCRIPTION, COMMENTS, EXECTYPE, LIQUIBASE) VALUES ('04.01.01-2', 'Kinetic Data', 'com/kineticdata/task/installer/changelog/db.changelog_04.01.01.xml', NOW(), 130, '7:5d1bcc9c18defbd73106946de824afa5', 'sql', '', 'EXECUTED', '3.1.1');
 
 -- Changeset com/kineticdata/task/installer/changelog/db.changelog_04.01.01.xml::04.01.01-3::Kinetic Data
 UPDATE public.db_changelogs SET TAG = '04.01.01 (2017-01-03)' WHERE DATEEXECUTED = (SELECT MAX(DATEEXECUTED) FROM public.db_changelogs);

@@ -95,7 +95,7 @@ services:
         dockerfile: Dockerfile
         args:
           IMAGE_VERSION: "8.5-jre8-alpine"
-          VERSION: "2.0.4"
+          VERSION: "2.1.0"
       command: '/wait-for-port-to-close.sh db-initializer 8181 catalina.sh run'
       depends_on:
         - db-initializer
