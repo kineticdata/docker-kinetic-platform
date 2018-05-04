@@ -79,7 +79,7 @@ services:
         dockerfile: Dockerfile
         args:
           IMAGE_VERSION: "8.5-jre8-alpine"
-          VERSION: "4.3.0"
+          VERSION: "4.3.1"
       command: '/wait-for-port.sh postgres 5432 bin/catalina.sh run'
       depends_on:
         - postgres
