@@ -21,6 +21,7 @@ ce:
   filestore:
     type: "Local"
     directory: "/home/filesDirectory"
+  remove_discussion_server: true
 
 # Properties for Kinetic Task
 task:
