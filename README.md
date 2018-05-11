@@ -50,6 +50,15 @@ docker-kinetic-platform_space-setup_1 exited with code 0
 
 Open your web browser to <http://localhost:8080> to get started.
 
+If you ran the `docker-compose up` command without using the detach flag (-d), you will continue to see logging information from each of the containers as long as your terminal is attached. You can safely detach from docker-compose by using the `CTRL+Z` key combination. You may see a message indicating `docker-compose up` was stopped, but your containers are actually still running.
+
+```bash
+^Z
+[2]+  Stopped                 docker-compose up
+```
+
+If you ran the `docker-compose up` command without using the detach flag (-d), you can detach from docker-compose and stop the services by using the `CTRL+C` key combination.  This will not remove your containers, it will simply stop them from running.
+
 ### Warning
 
 The HOST_PORT is used in configuration values to link Request CE with Bridgehub, Filehub, and Task.  If you change this value after the initial run, you will need to update some configuration values with the new HOST_PORT value.
