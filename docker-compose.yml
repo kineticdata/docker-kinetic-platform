@@ -115,7 +115,7 @@ services:
         dockerfile: Dockerfile
         args:
           IMAGE_VERSION: "8.5-jre8-alpine"
-          VERSION: "1.2.0"
+          VERSION: "1.2.2"
       image: kinetic-platform-bridgehub:latest
       command: '/wait-for-port-to-close.sh db-initializer 8181 catalina.sh run'
       depends_on:
@@ -131,7 +131,7 @@ services:
         dockerfile: Dockerfile
         args:
           IMAGE_VERSION: "8.5-jre8-alpine"
-          VERSION: "1.2.0"
+          VERSION: "1.2.1"
       image: kinetic-platform-filehub:latest
       command: '/wait-for-port-to-close.sh db-initializer 8181 catalina.sh run'
       depends_on:
