@@ -6,37 +6,53 @@ server {
     location /kinetic {
         proxy_pass         http://request-ce:8080;
         proxy_redirect     ~^http://(.*?)[:\d]*/(.*?)$ http://$1:$HOST_PORT/$2;
-        proxy_set_header   Host $host;
-        proxy_set_header   X-Real-IP $remote_addr;
-        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header   X-Forwarded-Host $server_name;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Host $http_host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-Port $HOST_PORT;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto http;
+        proxy_set_header X-Kinetic-Forwarded-By $server_addr;
+        proxy_set_header X-Kinetic-Forwarded-For $remote_addr;
     }
 
     location /kinetic-bridgehub {
         proxy_pass         http://bridgehub:8080;
         proxy_redirect     ~^http://(.*?)[:\d]*/(.*?)$ http://$1:$HOST_PORT/$2;
-        proxy_set_header   Host $host;
-        proxy_set_header   X-Real-IP $remote_addr;
-        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header   X-Forwarded-Host $server_name;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Host $http_host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-Port $HOST_PORT;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto http;
+        proxy_set_header X-Kinetic-Forwarded-By $server_addr;
+        proxy_set_header X-Kinetic-Forwarded-For $remote_addr;
     }
 
     location /kinetic-filehub {
         proxy_pass         http://filehub:8080;
         proxy_redirect     ~^http://(.*?)[:\d]*/(.*?)$ http://$1:$HOST_PORT/$2;
-        proxy_set_header   Host $host;
-        proxy_set_header   X-Real-IP $remote_addr;
-        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header   X-Forwarded-Host $server_name;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Host $http_host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-Port $HOST_PORT;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto http;
+        proxy_set_header X-Kinetic-Forwarded-By $server_addr;
+        proxy_set_header X-Kinetic-Forwarded-For $remote_addr;
     }
 
     location /kinetic-task {
         proxy_pass         http://task:8080;
         proxy_redirect     ~^http://(.*?)[:\d]*/(.*?)$ http://$1:$HOST_PORT/$2;
-        proxy_set_header   Host $host;
-        proxy_set_header   X-Real-IP $remote_addr;
-        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header   X-Forwarded-Host $server_name;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Host $http_host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-Port $HOST_PORT;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto http;
+        proxy_set_header X-Kinetic-Forwarded-By $server_addr;
+        proxy_set_header X-Kinetic-Forwarded-For $remote_addr;
     }
 
     location /health {
