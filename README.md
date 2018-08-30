@@ -79,12 +79,15 @@ Default credentials are used to initialize the applications, but these should be
 
 Also, the initial username / password used for the Request CE - Space Admin user are defined in the docker-compose file. You can change these values from the defaults shown below, but you should still change this password after the initial login as the password value is stored in plain text within the docker-compose file.
 
+Kinetic Task is configured to authenticate against Request CE, so any users added to the Request CE space will be allowed to login to Kinetic Task.
+
 ### Default Values
 
 | Application              | Username | Password |
 | ------------------------ | -------- | -------- |
 | Request CE - Admin       | admin    | admin    |
 | Request CE - Space Admin | kdadmin  | admin    |
-| Task                     | admin    | admin    |
+| Task - Admin             | admin    | admin    |
+| Task - Space Use         | kdadmin  | admin    |
 | Bridgehub                | admin    | admin    |
 | Filehub                  | admin    | admin    |
