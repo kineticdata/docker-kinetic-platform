@@ -14,7 +14,7 @@ The more memory and CPUs you can give to Docker, the better performance you will
 
 ## Docker for Windows
 
-We do not at this time support using Windows containers on Docker for Windows. This will only successfully run when using Linux containers. If Windows containers are used instead error messages such as `chmod: Command not found` or other various `Command not found` error messages.
+We do not at this time support using Windows containers on Docker for Windows. This will only successfully run when using Linux containers. If Windows containers are used instead error messages such as `chmod: Command not found` or other various `Command not found` error messages will occur.
 
 After ensuring that your Docker for Windows installation is set to use Linux containers, you'll need to do the following next steps to get the Kinetic docker platform running:
 
@@ -22,7 +22,7 @@ After ensuring that your Docker for Windows installation is set to use Linux con
 2.  Rename docker-compose-windows.yml to docker-compose.yml
 3.  From a PowerShell prompt enter the following command: `docker volume create postgres_kinetic_task_db_platform`
 
-These steps are necessary due to the Postgres application requiring it's data files be owned by the postgres user. This is not possible however when using Docker for Windows and storing the data files on the Windows file system.
+These steps are necessary due to the Postgres application requiring it's data files be owned by the postgres user. This is not possible however when using Docker for Windows and storing the data files on the Windows file system. More information on this is available in this [Github Issue](https://github.com/docker/for-win/issues/445)
 
 After following the steps above you should be to proceed to the 'Running' section below.
 
