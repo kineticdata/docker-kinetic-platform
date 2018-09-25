@@ -14,7 +14,7 @@ The more memory and CPUs you can give to Docker, the better performance you will
 
 ## Docker for Windows
 
-We do not at this time support using Windows containers on Docker for Windows. This will only successfully run when using Linux containers. If Windows containers are used instead error messages such as `chmod: Command not found` or other various `Command not found` error messages will occur.
+We do not at this time support using Windows containers on Docker for Windows. This will only successfully run when using Linux containers. If Windows containers are used then error messages such as `chmod: Command not found` or other various `Command not found` error messages will occur.
 
 After ensuring that your Docker for Windows installation is set to use Linux containers, you'll need to do the following next steps to get the Kinetic docker platform running:
 
