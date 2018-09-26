@@ -1,0 +1,147 @@
+version: '3'
+services:
+    cassandra:
+      build:
+        context: images/cassandra/
+        dockerfile: Dockerfile
+        args:
+          IMAGE_VERSION: "3.11.2"
+      image: kinetic-platform-cassandra:latest
+      environment:
+        HEAP_NEWSIZE: "32M"
+        MAX_HEAP_SIZE: "2048M"
+      volumes:
+        - ./data/cassandra/data:/var/lib/cassandra
+        - ./data/cassandra/logs:/var/log/cassandra
+
+    postgres:
+      image: postgres:10-alpine
+      environment:
+        POSTGRES_USER: "${POSTGRES_USER}"
+        POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+        POSTGRES_DB: "${POSTGRES_DB}"
+        PGPASSWORD: "${PGPASSWORD}"
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres"]
+      volumes:
+        - postgres_kinetic_task_db_platform:/var/lib/postgresql/data
+        - ./images/postgres/init-scripts:/docker-entrypoint-initdb.d
+
+    mailer:
+      build:
+        context: images/mailer
+        dockerfile: Dockerfile
+      image: kinetic-platform-mailer:latest
+
+    nginx:
+      image: nginx:alpine
+      restart: always
+      command: /bin/sh -c "echo 'Nginx starting' && envsubst '$$HOST_PORT' < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+      environment:
+        HOST_PORT: "${HOST_PORT}"
+      healthcheck:
+        test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost/health || exit 1"]
+      ports:
+        - "${HOST_PORT}:80"
+      volumes:
+        - ./images/nginx/default.template:/etc/nginx/conf.d/default.template
+        - ./data/nginx/logs:/var/log/nginx
+
+    db-initializer:
+      image: openjdk:alpine
+      command: java -Xmx256m -jar /docker-configuration.jar
+      depends_on:
+        - cassandra
+      volumes:
+        - ./images/db-initializer/target/docker-configuration-1.0.0-SNAPSHOT.jar:/docker-configuration.jar
+
+    space-setup:
+      build:
+        context: images/space-setup/
+        dockerfile: Dockerfile
+        args:
+          IMAGE_VERSION: "9.1.9.0-jdk-alpine"
+      image: kinetic-platform-space-setup:latest
+      command: '/wait-until-ready.sh /entrypoint.sh'
+      depends_on:
+        - request-ce
+        - task
+        - bridgehub
+        - filehub
+      environment:
+        HOST_PORT: "${HOST_PORT}"
+        SDK_LOG_LEVEL: trace
+        SPACE_NAME: Playground
+        SPACE_SLUG: playground
+        SPACE_USER_USERNAME: kdadmin
+        SPACE_USER_PASSWORD: admin
+
+    task:
+      build:
+        context: images/task/
+        dockerfile: Dockerfile
+        args:
+          IMAGE_VERSION: "8.5-jre8-alpine"
+          VERSION: "4.3.2"
+      image: kinetic-platform-task:latest
+      command: '/wait-for-port.sh postgres 5432 bin/catalina.sh run'
+      depends_on:
+        - postgres
+      environment:
+        JAVA_OPTS: "-Xmx768m -Dcom.kineticdata.task.dataDirectory=/home/dataDirectory"
+      volumes:
+        - ./images/task/postgres.properties:/home/dataDirectory/config/adapter.properties
+        - ./data/task/data:/home/dataDirectory
+
+    request-ce:
+      build:
+        context: images/request-ce/
+        dockerfile: Dockerfile
+        args:
+          IMAGE_VERSION: "8.5-jre8-alpine"
+          VERSION: "2.2.0"
+      image: kinetic-platform-request-ce:latest
+      command: '/wait-for-port-to-close.sh db-initializer 8181 catalina.sh run'
+      depends_on:
+        - db-initializer
+      environment:
+        JAVA_OPTS: "-Xmx512m -Dcom.kineticdata.core.dataDirectory=/home/dataDirectory"
+      volumes:
+        - ./data/request-ce/logs:/home/dataDirectory/logs
+
+    bridgehub:
+      build:
+        context: images/bridgehub/
+        dockerfile: Dockerfile
+        args:
+          IMAGE_VERSION: "8.5-jre8-alpine"
+          VERSION: "1.2.2"
+      image: kinetic-platform-bridgehub:latest
+      command: '/wait-for-port-to-close.sh db-initializer 8181 catalina.sh run'
+      depends_on:
+        - db-initializer
+      environment:
+        JAVA_OPTS: "-Xmx384m -Dcom.kineticdata.bridgehub.dataDirectory=/home/dataDirectory -Dcom.kineticdata.bridgehub.clustering.contactpoints=cassandra -Dcom.kineticdata.bridgehub.clustering.keyspace=kinetic_bridgehub"
+      volumes:
+        - ./data/bridgehub/data:/home/dataDirectory
+
+    filehub:
+      build:
+        context: images/filehub/
+        dockerfile: Dockerfile
+        args:
+          IMAGE_VERSION: "8.5-jre8-alpine"
+          VERSION: "1.2.1"
+      image: kinetic-platform-filehub:latest
+      command: '/wait-for-port-to-close.sh db-initializer 8181 catalina.sh run'
+      depends_on:
+        - db-initializer
+      environment:
+        JAVA_OPTS: "-Xmx256m -Dcom.kineticdata.filehub.dataDirectory=/home/dataDirectory -Dcom.kineticdata.filehub.clustering.contactpoints=cassandra -Dcom.kineticdata.filehub.clustering.keyspace=kinetic_filehub"
+      volumes:
+        - ./data/filehub/data:/home/dataDirectory
+        - ./data/filehub/files:/home/filesDirectory
+        
+volumes:
+    postgres_kinetic_task_db_platform:
+        external: true

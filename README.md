@@ -12,6 +12,20 @@ Ensure your docker host is configured with at least 4GB of memory, and at least 
 
 The more memory and CPUs you can give to Docker, the better performance you will get from the platform. If you are able to increase the amount of memory allocated to Docker, remember to increase the MAX_HEAP_SIZE environment variable for the cassandra service defined in the docker-compose.yml file, and possibly the -Xmx option of the JAVA_OPTS environment variable for the request-ce service.
 
+## Docker for Windows
+
+We do not at this time support using Windows containers on Docker for Windows. This will only successfully run when using Linux containers. If Windows containers are used then error messages such as `chmod: Command not found` or other various `Command not found` error messages will occur.
+
+After ensuring that your Docker for Windows installation is set to use Linux containers, you'll need to do the following next steps to get the Kinetic docker platform running:
+
+1.  Rename docker-compose.yml to docker-compose-linux.yml
+2.  Rename docker-compose-windows.yml to docker-compose.yml
+3.  From a PowerShell prompt enter the following command: `docker volume create postgres_kinetic_task_db_platform`
+
+These steps are necessary due to the Postgres application requiring it's data files be owned by the postgres user. This is not possible however when using Docker for Windows and storing the data files on the Windows file system. More information on this is available in this [Github Issue](https://github.com/docker/for-win/issues/445)
+
+After following the steps above you should be to proceed to the 'Running' section below.
+
 ## Running
 
 Command to run: `docker-compose up` or `docker-compose up -d` to run in detached mode. If you have pulled updates to this repository from Github, it may be necessary to rebuild the images so the changes are applied. You can do this by adding the `--build` flag; `docker-compose up --build` or `docker-compose up -d --build`.
@@ -72,6 +86,8 @@ Some examples of runtime data are:
 * web application configuration files
 * database files
 * log files
+
+If you're running Docker for Windows your database files are persisted to a mounted path within the Linux VM machine. These files will not show up in the data\postgres directory.
 
 ## Application Credentials
 
