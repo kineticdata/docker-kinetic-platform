@@ -22,7 +22,7 @@ services:
         POSTGRES_DB: "${POSTGRES_DB}"
         PGPASSWORD: "${PGPASSWORD}"
       healthcheck:
-        test: ["CMD-SHELL", "pg_isready -U postgres"]
+        test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       volumes:
         - postgres_kinetic_task_db_platform:/var/lib/postgresql/data
         - ./images/postgres/init-scripts:/docker-entrypoint-initdb.d
@@ -141,7 +141,7 @@ services:
       volumes:
         - ./data/filehub/data:/home/dataDirectory
         - ./data/filehub/files:/home/filesDirectory
-        
+
 volumes:
     postgres_kinetic_task_db_platform:
         external: true
